@@ -1,6 +1,6 @@
-import {isAuthorized} from "./src/middlewares/isAuthorized";
-import {findAppById, searchApps} from "./src/app/scraper";
-import {getBearerToken} from "./src/app/auth";
+const {isAuthorized} = require('./src/middlewares/isAuthorized');
+const {findAppById, searchApps} = require('./src/app/scraper');
+const {getBearerToken} = require('./src/app/auth');
 
 const express = require('express');
 const server = express();

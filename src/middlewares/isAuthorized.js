@@ -6,15 +6,24 @@ function unauthorizedError(res) {
     res.send('Unauthorized user');
 }
 
-export async function isAuthorized(req, res, next) {
+async function isAuthorized(req, res, next) {
     const {authorization} = req.headers;
     if (!authorization) {
         unauthorizedError(res);
     }
-    const decoded = await jwt.verify(authorization, privateKey);
-    if (decoded) {
-        next();
-    } else {
-        unauthorizedError(res);
+    try {
+        const decoded = await jwt.verify(authorization, privateKey);
+        if (decoded) {
+            next();
+        } else {
+            unauthorizedError(res);
+        }
+    } catch (error) {
+        res.status(401);
+        return res.send(error);
     }
 }
+
+module.exports = {
+    isAuthorized
+};
