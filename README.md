@@ -1,6 +1,6 @@
 # Pre-Requisites
     * Make sure node and npm is installed https://docs.npmjs.com/getting-started/installing-node
-    * Clone the repository to your computer
+    * Clone the repository to your computer using `git clone git@github.com:idankit/nodeJS-testing.git`
     * Go into the created directory `cd nodejs-testing`
     * run `npm i`
     * Run the app using `node server.js`. The app is now running on port 3000
