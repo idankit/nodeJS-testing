@@ -2,8 +2,12 @@ const gplay = require('google-play-scraper');
 
 async function findAppById(req, res) {
     const {appId} = req.params;
-    const app = await gplay.app({appId});
-    res.send(app);
+    try {
+        const app = await gplay.app({appId});
+        res.send(app);
+    } catch (e) {
+        res.status(e.status).send(e.message)
+    }
 }
 
 async function searchApps(req, res) {
