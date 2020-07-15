@@ -20,36 +20,34 @@ describe('GET App Details - Integration Tests', () => {
 		headers = {}
 	})
 
-	describe('Authorization tests', () => {
-		describe('getApp by ID as Unauthorized user', () => {
-			it('Missing Authorization header', async () => {
-				expect.assertions(1)
-				await expect(axios.get(`${serverUrl}/com.instagram.android`,
-					{headers: headers})).rejects.toThrow('Request failed with status code 401')
-			})
+	describe('Get App details authorization tests', () => {
+		it('Should fail Missing authorization in header', async () => {
+			expect.assertions(1)
+			await expect(axios.get(`${serverUrl}/com.instagram.android`,
+				{headers: headers})).rejects.toThrow('Request failed with status code 401')
+		})
 
-			it('Unauthorized Token', async () => {
-				headers['authorization'] ='eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOiJqb2huLmRvZSJ9.CuScq77_iCP4XsYGCMgGnQiATOmQwu_rR1LEB2Pcd_I'
-				expect.assertions(1)
-				await expect(axios.get(`${serverUrl}/com.instagram.android`,
-					{headers: headers})).rejects.toThrow('Request failed with status code 401')
-			})
+		it('Should fail dude to unauthorized token', async () => {
+			headers['authorization'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOiJqb2huLmRvZSJ9.CuScq77_iCP4XsYGCMgGnQiATOmQwu_rR1LEB2Pcd_I'
+			expect.assertions(1)
+			await expect(axios.get(`${serverUrl}/com.instagram.android`,
+				{headers: headers})).rejects.toThrow('Request failed with status code 401')
+		})
 
-			it('Authorized User', async () => {
-				req['query']['userName'] = faker.name.findName()
-				req['query']['password'] = faker.internet.password()
-				await getBearerToken(req, resSpy)
-				authToken = resSpy.send.args[0][0]
-				headers['authorization'] = authToken
-				const response = await axios.get(`${serverUrl}/com.strava`, {headers: headers})
-				expect(response).toMatchObject({status: 200})
-				expect(response).toMatchObject({statusText: 'OK'})
-				expect(response.data).toMatchObject({title: 'Strava: Track Running, Cycling & Swimming'})
-			})
+		it('Should pass with Authorized User', async () => {
+			req['query']['userName'] = faker.name.findName()
+			req['query']['password'] = faker.internet.password()
+			await getBearerToken(req, resSpy)
+			authToken = resSpy.send.args[0][0]
+			headers['authorization'] = authToken
+			const response = await axios.get(`${serverUrl}/com.strava`, {headers: headers})
+			expect(response).toMatchObject({status: 200})
+			expect(response).toMatchObject({statusText: 'OK'})
+			expect(response.data).toMatchObject({title: 'Strava: Track Running, Cycling & Swimming'})
 		})
 	})
 
-	describe('GET Find app by id', () => {
+	describe('Find app by id tests', () => {
 		beforeEach(async () => {
 			req['query']['userName'] = faker.name.findName()
 			req['query']['password'] = faker.internet.password()
@@ -57,14 +55,14 @@ describe('GET App Details - Integration Tests', () => {
 			headers['authorization'] = resSpy.send.args[0][0]
 		})
 
-		it('Valid App ID', async () => {
+		it('Should pass with valid app id', async () => {
 			const response = await axios.get(`${serverUrl}/io.strongapp.strong`, {headers: headers})
 			expect(response).toMatchObject({status: 200})
 			expect(response).toMatchObject({statusText: 'OK'})
 			expect(response.data).toMatchObject({title: 'Strong - Workout Tracker Gym Log'})
 		})
 
-		it('Invalid App ID', async () => {
+		it('Should fail with invalid app id', async () => {
 			expect.assertions(1)
 			await expect(axios.get(`${serverUrl}/io.strongapp.`,
 				{headers: headers})).rejects.toThrow('Request failed with status code 404')
