@@ -11,7 +11,7 @@ let serverUrl = 'http://localhost:3000/app'
 let headers
 
 
-describe('GET App Details - Integration Tests', () => {
+describe('Retrieve app details - Integration Tests', () => {
 	beforeAll(() => {
 		req = {method: 'GET', query: {}, headers: {}}
 		resSpy.send = sinon.spy()
