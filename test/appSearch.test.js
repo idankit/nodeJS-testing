@@ -74,5 +74,39 @@ describe('Search for app - Integration Tests', () => {
 			expect(response).toMatchObject({statusText: 'OK'})
 			expect(response.data).toEqual([])
 		})
+
+		describe('Limiting returned results', () => {
+			it('Should pass with only 2 results when count is an int', async () => {
+				let params = {count: 2}
+				const response = await axios.get(`${serverUrl}/search/com.stra`, {headers: headers, params: params})
+				expect(response).toMatchObject({status: 200})
+				expect(response).toMatchObject({statusText: 'OK'})
+				expect(response.data).toHaveLength(2)
+			})
+
+			it('Should pass with only 2 results when count is a string', async () => {
+				let params = {count: '2'}
+				const response = await axios.get(`${serverUrl}/search/com.stra`, {headers: headers, params: params})
+				expect(response).toMatchObject({status: 200})
+				expect(response).toMatchObject({statusText: 'OK'})
+				expect(response.data).toHaveLength(2)
+			})
+
+			it('Should fail due to count being > 250', async () => {
+				let params = {count: 260}
+				const response = await axios.get(`${serverUrl}/search/com.stra`, {headers: headers, params: params})
+				expect(response).toMatchObject({status: 200})
+				expect(response).toMatchObject({statusText: 'OK'})
+				expect(response.data).toBe('The number of results can\'t exceed 250')
+			})
+
+			it('Should fail when count is a string', async () => {
+				const params = {count: 'ten'}
+				const response = await axios.get(`${serverUrl}/search/com.sta`, {headers: headers, params: params})
+				expect(response).toMatchObject({status: 200})
+				expect(response).toMatchObject({statusText: 'OK'})
+				expect(response.data).toEqual([])
+			})
+		})
 	})
 })

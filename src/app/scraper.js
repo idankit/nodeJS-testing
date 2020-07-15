@@ -13,8 +13,12 @@ async function findAppById(req, res) {
 async function searchApps(req, res) {
     const {term} = req.params;
     const {count} = req.query;
-    const apps = await gplay.search({term, num: count});
-    res.send(apps);
+    try {
+        const apps = await gplay.search({term, num: count});
+        res.send(apps);
+    } catch (e) {
+        res.send(e.message)
+    }
 }
 
 module.exports = {
